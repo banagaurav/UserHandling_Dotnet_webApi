@@ -7,7 +7,8 @@ namespace UserHandling.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; } // DbSet for the User model
+        public DbSet<User> Users { get; set; }
+        public DbSet<Pdf> Pdfs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
