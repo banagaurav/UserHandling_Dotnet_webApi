@@ -52,6 +52,26 @@ namespace UserHandling.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            CreatedAt = new DateTime(2025, 1, 15, 10, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "admin@example.com",
+                            Password = "AQAAAAIAAYagAAAAEKfy2SHnyPEUyf69Y0v+ElKH98SATsIpK8lf4ZwIeAI7R7LQNxrnMaSYo1ZSSwONPA==",
+                            Role = "Admin",
+                            Username = "admin"
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            CreatedAt = new DateTime(2025, 1, 15, 10, 5, 0, 0, DateTimeKind.Utc),
+                            Email = "user1@example.com",
+                            Password = "AQAAAAIAAYagAAAAELu5GqA1p1E9+DoIwxEtdMHxGV6C9v0wlo0IOgaguAlNi7ST9y7sGhojoFXz6Hlsww==",
+                            Role = "User",
+                            Username = "user1"
+                        });
                 });
 #pragma warning restore 612, 618
         }

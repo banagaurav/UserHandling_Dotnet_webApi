@@ -1,4 +1,4 @@
-namespace MyWebApi.Models
+namespace UserHandling.Models
 {
     public class User
     {

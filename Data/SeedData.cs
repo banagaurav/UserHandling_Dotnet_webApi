@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MyWebApi.Models;
+using UserHandling.Models;
 
-namespace MyWebApi.Data
+namespace UserHandling.Data
 {
     public static class SeedData
     {
@@ -20,7 +20,7 @@ namespace MyWebApi.Data
                     Password = hasher.HashPassword(null, "admin123"), // Use hashed passwords in production
                     Email = "admin@example.com",
                     Role = "Admin",
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = new DateTime(2025, 1, 15, 10, 0, 0, DateTimeKind.Utc)
                 },
                 new User
                 {
@@ -29,7 +29,7 @@ namespace MyWebApi.Data
                     Password = hasher.HashPassword(null, "user123"), // Use hashed passwords in production
                     Email = "user1@example.com",
                     Role = "User",
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = new DateTime(2025, 1, 15, 10, 5, 0, DateTimeKind.Utc) // Hardcoded value
                 }
             );
         }

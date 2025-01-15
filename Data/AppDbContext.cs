@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using MyWebApi.Models;
+using UserHandling.Models;
 
-namespace MyWebApi.Data
+namespace UserHandling.Data
 {
     public class AppDbContext : DbContext
     {

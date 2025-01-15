@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using MyWebApi.Data;
-using MyWebApi.Models;
+using UserHandling.Data;
+using UserHandling.Models;
 
 namespace UserHandling.Repositories
 {

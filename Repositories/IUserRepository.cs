@@ -1,5 +1,5 @@
 using System;
-using MyWebApi.Models;
+using UserHandling.Models;
 
 namespace UserHandling.Repositories;
 

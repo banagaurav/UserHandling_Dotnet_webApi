@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using MyWebApi.Data;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using UserHandling.Data;
 using UserHandling.Repositories;
 using UserHandling.Services;
 
@@ -13,7 +14,8 @@ builder.Services.AddSwaggerGen();
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning)));
 
 // Register repository and service
 builder.Services.AddScoped<IUserRepository, UserRepository>();
