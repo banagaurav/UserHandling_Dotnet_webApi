@@ -1,4 +1,5 @@
-using MyWebApi.Models;
+using UserHandling.DTOs;
+using UserHandling.Models;
 using UserHandling.Repositories;
 
 namespace UserHandling.Services
@@ -6,20 +7,38 @@ namespace UserHandling.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly MappingService _mappingService;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, MappingService mappingService)
         {
             _userRepository = userRepository;
+            _mappingService = mappingService;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        // Get all users as UserDto (async)
+        public async Task<IEnumerable<UserDto>> GetUserDtoAll()
         {
-            return await _userRepository.GetAllUsersAsync();
+            var users = await _userRepository.GetAllUsersAsync();  // Use async method
+            return _mappingService.MapToUserDtoList(users);
         }
 
-        public async Task<User?> GetUserByIdAsync(int id)
+        // Get user by Id as UserDto (async)
+        public async Task<UserDto> GetUserDtoById(int id)
         {
-            return await _userRepository.GetUserByIdAsync(id);
+            var user = await _userRepository.GetUserByIdAsync(id);  // Use async method
+            if (user == null) return null;
+            return _mappingService.MapToUserDto(user);
+        }
+
+        // Other methods can stay the same as they are using async methods
+        public async Task<User> GetUserByIdAsync(int id)
+        {
+            return await _userRepository.GetUserByIdAsync(id);  // Use async method
+        }
+
+        public async Task<User> AddUserAsync(User user)
+        {
+            return await _userRepository.AddAsync(user);  // Use async method
         }
     }
 }

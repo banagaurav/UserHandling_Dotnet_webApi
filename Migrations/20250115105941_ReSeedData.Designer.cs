@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyWebApi.Data;
+using UserHandling.Data;
 
 #nullable disable
 
 namespace UserHandling.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250115105004_ReSeedData")]
+    [Migration("20250115105941_ReSeedData")]
     partial class ReSeedData
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace UserHandling.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MyWebApi.Models.User", b =>
+            modelBuilder.Entity("UserHandling.Models.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
@@ -62,7 +62,7 @@ namespace UserHandling.Migrations
                             UserId = 1,
                             CreatedAt = new DateTime(2025, 1, 15, 10, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@example.com",
-                            Password = "AQAAAAIAAYagAAAAEKfy2SHnyPEUyf69Y0v+ElKH98SATsIpK8lf4ZwIeAI7R7LQNxrnMaSYo1ZSSwONPA==",
+                            Password = "AQAAAAIAAYagAAAAEPqdv6roU0tq0tdeqqJmUcvhbcGr7wYqZ8bAXctCaNpXY9U13EZFsP1uY8Nstv1b3g==",
                             Role = "Admin",
                             Username = "admin"
                         },
@@ -71,7 +71,7 @@ namespace UserHandling.Migrations
                             UserId = 2,
                             CreatedAt = new DateTime(2025, 1, 15, 10, 5, 0, 0, DateTimeKind.Utc),
                             Email = "user1@example.com",
-                            Password = "AQAAAAIAAYagAAAAELu5GqA1p1E9+DoIwxEtdMHxGV6C9v0wlo0IOgaguAlNi7ST9y7sGhojoFXz6Hlsww==",
+                            Password = "AQAAAAIAAYagAAAAEPNbzArmnxj5q8gQYhuxuBSnwQUGsKVdD4a1NnqpTvnPePIaI/ynSEHtrms8wXTgiw==",
                             Role = "User",
                             Username = "user1"
                         });
