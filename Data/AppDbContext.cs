@@ -9,6 +9,7 @@ namespace UserHandling.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Pdf> Pdfs { get; set; }
+        public DbSet<UserPdf> UserPdfs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

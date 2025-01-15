@@ -12,8 +12,8 @@ using UserHandling.Data;
 namespace UserHandling.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250115124344_AddPdfTable")]
-    partial class AddPdfTable
+    [Migration("20250115125320_SeedAdditionalUsers")]
+    partial class SeedAdditionalUsers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,7 +124,7 @@ namespace UserHandling.Migrations
                             UserId = 1,
                             CreatedAt = new DateTime(2025, 1, 15, 10, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@example.com",
-                            Password = "AQAAAAIAAYagAAAAEHxN0mxOCfiAttACyI1yKUUQWhP8GFmuPIlJomy2KiT3PUCc9FulWr0Z+O40EzX88w==",
+                            Password = "AQAAAAIAAYagAAAAEE55v591Wy9/V2Sl4/9gOkx8cyUywIJ5bXOR3eOd03sCitN8cO7c/tN/4iUM3ONgSA==",
                             Role = "Admin",
                             Username = "admin"
                         },
@@ -133,10 +133,108 @@ namespace UserHandling.Migrations
                             UserId = 2,
                             CreatedAt = new DateTime(2025, 1, 15, 10, 5, 0, 0, DateTimeKind.Utc),
                             Email = "user1@example.com",
-                            Password = "AQAAAAIAAYagAAAAEJF2vKWYctnUJ9ArEF6ESXhI4m/KzKeUOiV+iZiqJAPYmB+HVRx4hYOQNq8qYH+qXw==",
+                            Password = "AQAAAAIAAYagAAAAEFqC+9F0gQNCLEVTz8ES4ZLQWrprMd7C5LvCq01NALKZSJMpZg1eCZ7/FNsmQk3img==",
                             Role = "User",
                             Username = "user1"
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            CreatedAt = new DateTime(2025, 1, 15, 10, 10, 0, 0, DateTimeKind.Utc),
+                            Email = "user2@example.com",
+                            Password = "AQAAAAIAAYagAAAAEMMaHQ8i4KZbcPQIT1lVueRfT0UEzxqCwu1pZRAhaDOEOIG2ggqELYNvtNCY/e5jQg==",
+                            Role = "User",
+                            Username = "user2"
+                        },
+                        new
+                        {
+                            UserId = 4,
+                            CreatedAt = new DateTime(2025, 1, 15, 10, 15, 0, 0, DateTimeKind.Utc),
+                            Email = "alice.jones@example.com",
+                            Password = "AQAAAAIAAYagAAAAEKPWJOutnj0zx2f2OU60XAEEz6aEnZTA3YOto0/OLwiwdSUb/0pSX/S3uLlYgsdbTQ==",
+                            Role = "User",
+                            Username = "alice_jones"
+                        },
+                        new
+                        {
+                            UserId = 5,
+                            CreatedAt = new DateTime(2025, 1, 15, 10, 20, 0, 0, DateTimeKind.Utc),
+                            Email = "bob.white@example.com",
+                            Password = "AQAAAAIAAYagAAAAEFnJ+PJv3Z4qRQeGS1UwoAIm/uGg9rSCJSbAHSV08Xl0bpbu3jlz6M0tvD9DbZjXjA==",
+                            Role = "Admin",
+                            Username = "bob_white"
                         });
+                });
+
+            modelBuilder.Entity("UserHandling.Models.UserPdf", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PdfId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "PdfId");
+
+                    b.HasIndex("PdfId");
+
+                    b.ToTable("UserPdfs");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            PdfId = 1
+                        },
+                        new
+                        {
+                            UserId = 1,
+                            PdfId = 2
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            PdfId = 3
+                        },
+                        new
+                        {
+                            UserId = 2,
+                            PdfId = 4
+                        },
+                        new
+                        {
+                            UserId = 3,
+                            PdfId = 5
+                        });
+                });
+
+            modelBuilder.Entity("UserHandling.Models.UserPdf", b =>
+                {
+                    b.HasOne("UserHandling.Models.Pdf", "Pdf")
+                        .WithMany("UserPdfs")
+                        .HasForeignKey("PdfId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UserHandling.Models.User", "User")
+                        .WithMany("UserPdfs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pdf");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("UserHandling.Models.Pdf", b =>
+                {
+                    b.Navigation("UserPdfs");
+                });
+
+            modelBuilder.Entity("UserHandling.Models.User", b =>
+                {
+                    b.Navigation("UserPdfs");
                 });
 #pragma warning restore 612, 618
         }

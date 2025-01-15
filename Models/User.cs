@@ -13,5 +13,7 @@ namespace UserHandling.Models
         public string Role { get; set; } = "User"; // Default role, e.g., Admin/User
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Timestamp for creation
+
+        public ICollection<UserPdf> UserPdfs { get; set; }
     }
 }
