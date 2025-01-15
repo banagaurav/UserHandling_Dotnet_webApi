@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using Code2.Models;
+using MyWebApi.Models;
 
-
-
-public class AppDbContext : DbContext
+namespace MyWebApi.Data
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public class AppDbContext : DbContext
     {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        public DbSet<User> Users { get; set; } // DbSet for the User model
     }
 }
