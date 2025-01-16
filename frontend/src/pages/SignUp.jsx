@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../services/UserService";
+import "../styles/SignUp.css";
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("User"); // Default role
+  const [role, setRole] = useState("User");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -18,7 +19,7 @@ const SignUp = () => {
     try {
       const response = await userService.createUser(newUser);
       if (response.status === 201) {
-        navigate("/login"); // Redirect to login page after successful signup
+        navigate("/login");
       }
     } catch (error) {
       setError("Failed to create user");
@@ -26,9 +27,9 @@ const SignUp = () => {
   };
 
   return (
-    <div>
+    <div className="signup-container">
       <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="signup-form" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Username"
@@ -51,9 +52,17 @@ const SignUp = () => {
           <option value="User">User</option>
           <option value="Admin">Admin</option>
         </select>
-        {error && <p>{error}</p>}
-        <button type="submit">Sign Up</button>
+        {error && <p className="error-message">{error}</p>}
+        <button type="submit" className="signup-button">
+          Sign Up
+        </button>
       </form>
+      <p>
+        Already have an account?{" "}
+        <button onClick={() => navigate("/login")} className="link-button">
+          Login
+        </button>
+      </p>
     </div>
   );
 };

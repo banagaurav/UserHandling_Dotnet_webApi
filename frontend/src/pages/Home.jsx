@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import pdfService from "../services/pdfService";
+import "../styles/Home.css";
 
 const Home = () => {
   const [pdfs, setPdfs] = useState([]);

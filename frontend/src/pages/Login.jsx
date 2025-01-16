@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import userService from "../services/UserService";
+import "../styles/Login.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -14,7 +15,6 @@ const Login = () => {
     try {
       const response = await userService.loginUser({ username, password });
       if (response.status === 200) {
-        // Simulate storing user data
         localStorage.setItem("token", response.data.token); // Example token handling
         navigate("/home"); // Redirect to Home page
       }
@@ -24,9 +24,9 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="login-form" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Username"
@@ -39,9 +39,17 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {error && <p>{error}</p>}
-        <button type="submit">Login</button>
+        {error && <p className="error-message">{error}</p>}
+        <button type="submit" className="login-button">
+          Login
+        </button>
       </form>
+      <p>
+        Don't have an account?{" "}
+        <button onClick={() => navigate("/signup")} className="link-button">
+          Sign Up
+        </button>
+      </p>
     </div>
   );
 };
