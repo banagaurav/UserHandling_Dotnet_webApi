@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using UserHandling.Dtos;
+using UserHandling.Models;
 using UserHandling.Services;
 
 namespace UserHandling.Controllers
@@ -49,7 +50,7 @@ namespace UserHandling.Controllers
             return Ok(user); // Return User entity (raw data)
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto createUserDto)
         {
             if (createUserDto == null)
@@ -69,6 +70,20 @@ namespace UserHandling.Controllers
             }
 
             return CreatedAtAction(nameof(GetUserById), new { id = createdUser.UserId }, createdUser);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginUserDto loginUserDto)
+        {
+            var user = await _userService.AuthenticateUserAsync(loginUserDto.Username, loginUserDto.Password);
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid credentials");
+            }
+
+            // Return a token or any other relevant response
+            return Ok(user);
         }
     }
 }

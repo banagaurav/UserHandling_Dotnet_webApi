@@ -5157,11 +5157,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Code\\C#\\UserHandling\\UserHandling.csproj",
+      "projectUniqueName": "D:\\Code\\UserHandling\\UserHandling.csproj",
       "projectName": "UserHandling",
-      "projectPath": "D:\\Code\\C#\\UserHandling\\UserHandling.csproj",
+      "projectPath": "D:\\Code\\UserHandling\\UserHandling.csproj",
       "packagesPath": "C:\\Users\\Saturday\\.nuget\\packages\\",
-      "outputPath": "D:\\Code\\C#\\UserHandling\\obj\\",
+      "outputPath": "D:\\Code\\UserHandling\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Saturday\\AppData\\Roaming\\NuGet\\NuGet.Config"
