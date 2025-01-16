@@ -15,8 +15,13 @@ const Login = () => {
     try {
       const response = await userService.loginUser({ username, password });
       if (response.status === 200) {
-        localStorage.setItem("token", response.data.token); // Example token handling
-        navigate("/home"); // Redirect to Home page
+        const token = response.data.token;
+        localStorage.setItem("token", token); // Store token in localStorage
+
+        // Optionally, you can store the username for the user info in your top-right section
+        localStorage.setItem("username", username);
+
+        navigate("/home");
       }
     } catch (error) {
       setError("Invalid credentials");

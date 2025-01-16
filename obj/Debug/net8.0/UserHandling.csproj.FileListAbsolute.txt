@@ -340,3 +340,4 @@ D:\Code\UserHandling\obj\Debug\net8.0\refint\UserHandling.dll
 D:\Code\UserHandling\obj\Debug\net8.0\UserHandling.pdb
 D:\Code\UserHandling\obj\Debug\net8.0\UserHandling.genruntimeconfig.cache
 D:\Code\UserHandling\obj\Debug\net8.0\ref\UserHandling.dll
+D:\Code\UserHandling\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
