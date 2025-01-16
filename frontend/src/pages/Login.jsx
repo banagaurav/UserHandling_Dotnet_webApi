@@ -14,8 +14,9 @@ const Login = () => {
     try {
       const response = await userService.loginUser({ username, password });
       if (response.status === 200) {
-        // Store token or set user context
-        navigate("/dashboard"); // Redirect to dashboard or home
+        // Simulate storing user data
+        localStorage.setItem("token", response.data.token); // Example token handling
+        navigate("/home"); // Redirect to Home page
       }
     } catch (error) {
       setError("Invalid credentials");

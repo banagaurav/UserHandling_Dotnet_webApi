@@ -1,17 +1,23 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Import Router, Routes, and Route
-import SignUp from "./pages/SignUp.jsx";
-import Login from "./pages/Login.jsx";
-import "./App.css";
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
+import Home from "./pages/Home";
 
 const App = () => {
   return (
     <Router>
-      {/* Wrap everything in Router */}
       <Routes>
-        {/* Define the routes here */}
-        <Route path="/" element={<Login />} /> {/* Default route */}
-        <Route path="/signup" element={<SignUp />} />
+        {/* Default route to login */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
     </Router>
   );
