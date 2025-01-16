@@ -10,5 +10,6 @@ public interface IUserService
     Task<UserDto> GetUserDtoById(int id);
     Task<User> GetUserByIdAsync(int id);
     Task<User> AddUserAsync(User user);
+    Task<User> AuthenticateUserAsync(string username, string password);
 
 }

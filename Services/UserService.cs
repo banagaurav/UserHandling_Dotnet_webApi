@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using UserHandling.DTOs;
 using UserHandling.Models;
 using UserHandling.Repositories;
@@ -39,6 +40,26 @@ namespace UserHandling.Services
         public async Task<User> AddUserAsync(User user)
         {
             return await _userRepository.AddAsync(user);  // Use async method
+        }
+
+        public async Task<User> AuthenticateUserAsync(string username, string password)
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+            var user = users.FirstOrDefault(u => u.Username == username); // Find user by username
+
+            if (user == null)
+            {
+                return null; // User not found
+            }
+
+            // Verify password using password hasher
+            var result = user.Password;
+            if (result == null)
+            {
+                return null; // Invalid password
+            }
+
+            return user; // Return the authenticated user
         }
     }
 }
