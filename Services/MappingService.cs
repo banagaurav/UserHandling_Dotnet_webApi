@@ -32,13 +32,28 @@ public class MappingService
         return users.Select(u => MapToUserDto(u));
     }
 
+
     public IEnumerable<PdfDto> MapToPdfDtos(IEnumerable<Pdf> pdfs)
     {
-        return pdfs.Select(p => new PdfDto
+        return pdfs.Select(pdf => new PdfDto
         {
-            Title = p.Title,
-            Description = p.Description,
-            Authors = p.UserPdfs.Select(up => up.User.Username).ToList()
-        });
+            Title = pdf.Title,
+            Description = pdf.Description,
+            Authors = pdf.UserPdfs?.Select(up => up.User.Username).ToList() ?? new List<string>()
+        }).ToList();
+    }
+
+    public PdfUploadDto MapToPdfUploadDto(Pdf pdf)
+    {
+        return new PdfUploadDto
+        {
+            PdfId = pdf.PdfId,
+            Title = pdf.Title,
+            Description = pdf.Description,
+            FilePath = pdf.FilePath,
+            Authors = pdf.UserPdfs?.Select(up => up.User.Username).ToList() ?? new List<string>()
+        };
     }
 }
+
+

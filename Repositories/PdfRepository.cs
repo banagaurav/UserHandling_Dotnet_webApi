@@ -20,5 +20,20 @@ namespace UserHandling.Repositories
                     .ThenInclude(up => up.User)
                 .ToListAsync();
         }
+
+        public async Task SavePdfAsync(Pdf pdf, int userId)
+        {
+            _context.Pdfs.Add(pdf);
+            await _context.SaveChangesAsync();
+
+            var userPdf = new UserPdf
+            {
+                UserId = userId,
+                PdfId = pdf.PdfId
+            };
+
+            _context.UserPdfs.Add(userPdf);
+            await _context.SaveChangesAsync();
+        }
     }
 }

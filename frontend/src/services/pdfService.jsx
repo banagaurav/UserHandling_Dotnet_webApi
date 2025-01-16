@@ -12,6 +12,24 @@ const getAllPdfs = async () => {
   }
 };
 
-export default {
-  getAllPdfs,
+// Refactor uploadPdf to use axios
+const uploadPdf = async (formData, token) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5180/api/Pdf/upload",
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data;
+  } catch (err) {
+    console.error("Error uploading PDF:", err);
+    throw err;
+  }
 };
+
+export default { getAllPdfs, uploadPdf };
