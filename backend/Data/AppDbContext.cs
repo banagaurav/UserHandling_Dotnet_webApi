@@ -1,42 +1,27 @@
-using System.Security.Cryptography;
-using System.Text;
-using backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<PDF> PDFs { get; set; } = null!;
+    public DbSet<UserPDF> UserPDFs { get; set; } = null!;
 
-    public DbSet<User> Users { get; set; }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
+        // Configure the UserPDF relationship
+        modelBuilder.Entity<UserPDF>()
+            .HasKey(up => new { up.UserId, up.PDFId }); // Composite Key
 
-        // Seed Default Users
-        modelBuilder.Entity<User>().HasData(
-            new User
-            {
-                UserId = 1,
-                Username = "admin",
-                PasswordHash = HashPassword("Admin@123"), // Hashed Password
-                Role = "Admin"
-            },
-            new User
-            {
-                UserId = 2,
-                Username = "client",
-                PasswordHash = HashPassword("Client@123"),
-                Role = "Client"
-            }
-        );
-    }
+        modelBuilder.Entity<UserPDF>()
+            .HasOne(up => up.User)
+            .WithMany(u => u.UserPDFs)
+            .HasForeignKey(up => up.UserId);
 
-    // ✅ Helper Method to Hash Passwords (SHA256)
-    private static string HashPassword(string password)
-    {
-        using var sha256 = SHA256.Create();
-        var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-        return Convert.ToBase64String(bytes);
+        modelBuilder.Entity<UserPDF>()
+            .HasOne(up => up.PDF)
+            .WithMany(p => p.UserPDFs)
+            .HasForeignKey(up => up.PDFId);
     }
 }

@@ -1,17 +1,15 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace backend.Models;
 public class User
 {
-    [Key]
-    public int UserId { get; set; }
-
-    [Required]
+    public int Id { get; set; }
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public string FullName => $"{FirstName} {LastName}";
+    public string PhoneNumber { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
+    public string Password { get; set; } = string.Empty;
+    public string Role { get; set; } = string.Empty;
 
-    [Required]
-    public string PasswordHash { get; set; } = string.Empty;
-
-    [Required]
-    public string Role { get; set; } = "Client"; // Default role
+    // Navigation property for related PDFs
+    public ICollection<UserPDF> UserPDFs { get; set; } = new List<UserPDF>();
 }
