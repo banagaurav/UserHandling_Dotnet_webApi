@@ -1,33 +1,47 @@
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
-  Routes,
   Route,
+  Routes,
   Navigate,
 } from "react-router-dom";
-import { useState } from "react";
-import Login from "./pages/Login";
-import Home from "./pages/Home";
+import Login from "./components/Auth/Login";
+import Register from "./components/Auth/Register";
+import Home from "./components/Home/Home";
+import UploadForm from "./components/Home/UploadForm";
 
-function App() {
+const App = () => {
+  // Track if the user is authenticated
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Simulate checking authentication status (could be replaced with API or context)
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   return (
     <Router>
       <Routes>
-        {/* Default Route: Load Login Page First */}
+        {/* If not authenticated, redirect to login */}
         <Route
           path="/"
-          element={<Login onLogin={() => setIsAuthenticated(true)} />}
+          element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
         />
-
-        {/* Navigate to Home after login */}
         <Route
-          path="/home"
-          element={isAuthenticated ? <Home /> : <Navigate to="/" />}
+          path="/login"
+          element={<Login setIsAuthenticated={setIsAuthenticated} />}
+        />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/upload"
+          element={isAuthenticated ? <UploadForm /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;
