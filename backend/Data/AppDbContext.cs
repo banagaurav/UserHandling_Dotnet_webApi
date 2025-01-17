@@ -65,5 +65,32 @@ public class AppDbContext : DbContext
             .HasOne(sp => sp.PDF)
             .WithMany(p => p.SubjectPDFs)
             .HasForeignKey(sp => sp.PDFId);
+
+
+        // Seed data for Faculties
+        modelBuilder.Entity<Faculty>().HasData(
+            new Faculty { Id = 1, Name = "Faculty of Engineering", UniversityId = 1 },
+            new Faculty { Id = 2, Name = "Faculty of Science", UniversityId = 1 },
+            new Faculty { Id = 3, Name = "Faculty of Business", UniversityId = 2 },
+            new Faculty { Id = 4, Name = "Faculty of Arts", UniversityId = 2 }
+        );
+
+        // Seed data for Academic Programs
+        modelBuilder.Entity<AcademicProgram>().HasData(
+            new AcademicProgram { Id = 1, Name = "BSc Computer Science", FacultyId = 1 },
+            new AcademicProgram { Id = 2, Name = "BSc Physics", FacultyId = 2 },
+            new AcademicProgram { Id = 3, Name = "MBA", FacultyId = 3 },
+            new AcademicProgram { Id = 4, Name = "BA English", FacultyId = 4 }
+        );
+
+        // Seed data for Subjects
+        modelBuilder.Entity<Subject>().HasData(
+            new Subject { Id = 1, Name = "Data Structures", AcademicProgramId = 1, CreditHours = 3 },
+            new Subject { Id = 2, Name = "Operating Systems", AcademicProgramId = 1, CreditHours = 3 },
+            new Subject { Id = 3, Name = "Quantum Mechanics", AcademicProgramId = 2, CreditHours = 4 },
+            new Subject { Id = 4, Name = "Financial Management", AcademicProgramId = 3, CreditHours = 3 },
+            new Subject { Id = 5, Name = "English Literature", AcademicProgramId = 4, CreditHours = 2 }
+        );
+
     }
 }

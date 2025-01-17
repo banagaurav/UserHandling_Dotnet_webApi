@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,7 +36,13 @@ public class FacultyController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<FacultyDto>> CreateFaculty(FacultyDto facultyDto)
     {
-        // Check if the University exists before creating the Faculty
+        // Validate FacultyDto
+        if (string.IsNullOrWhiteSpace(facultyDto.Name))
+        {
+            return BadRequest("Faculty name is required.");
+        }
+
+        // Check if the University exists
         var university = await _context.Universities
             .FirstOrDefaultAsync(u => u.Id == facultyDto.UniversityId);
 
@@ -44,20 +51,28 @@ public class FacultyController : ControllerBase
             return NotFound("University not found.");
         }
 
-        // Create the new Faculty
-        var faculty = new Faculty
+        try
         {
-            Name = facultyDto.Name,
-            UniversityId = facultyDto.UniversityId
-        };
+            // Create the new Faculty
+            var faculty = new Faculty
+            {
+                Name = facultyDto.Name,
+                UniversityId = facultyDto.UniversityId
+            };
 
-        _context.Faculties.Add(faculty);
-        await _context.SaveChangesAsync();
+            _context.Faculties.Add(faculty);
+            await _context.SaveChangesAsync();
 
-        // Return the created Faculty data
-        facultyDto.Id = faculty.Id;
-        return CreatedAtAction(nameof(GetAllFaculties), new { id = faculty.Id }, facultyDto);
+            // Return the created Faculty data
+            facultyDto.Id = faculty.Id;
+            return CreatedAtAction(nameof(GetAllFaculties), new { id = faculty.Id }, facultyDto);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
     }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteFaculty(int id)
     {

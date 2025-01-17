@@ -44,6 +44,36 @@ namespace backend.Migrations
                     b.HasIndex("FacultyId");
 
                     b.ToTable("AcademicPrograms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "",
+                            FacultyId = 1,
+                            Name = "BSc Computer Science"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "",
+                            FacultyId = 2,
+                            Name = "BSc Physics"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Code = "",
+                            FacultyId = 3,
+                            Name = "MBA"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Code = "",
+                            FacultyId = 4,
+                            Name = "BA English"
+                        });
                 });
 
             modelBuilder.Entity("Faculty", b =>
@@ -66,6 +96,32 @@ namespace backend.Migrations
                     b.HasIndex("UniversityId");
 
                     b.ToTable("Faculties");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Faculty of Engineering",
+                            UniversityId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Faculty of Science",
+                            UniversityId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Faculty of Business",
+                            UniversityId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Faculty of Arts",
+                            UniversityId = 2
+                        });
                 });
 
             modelBuilder.Entity("PDF", b =>
@@ -116,6 +172,48 @@ namespace backend.Migrations
                     b.HasIndex("AcademicProgramId");
 
                     b.ToTable("Subjects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AcademicProgramId = 1,
+                            Code = "",
+                            CreditHours = 3,
+                            Name = "Data Structures"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AcademicProgramId = 1,
+                            Code = "",
+                            CreditHours = 3,
+                            Name = "Operating Systems"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AcademicProgramId = 2,
+                            Code = "",
+                            CreditHours = 4,
+                            Name = "Quantum Mechanics"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AcademicProgramId = 3,
+                            Code = "",
+                            CreditHours = 3,
+                            Name = "Financial Management"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AcademicProgramId = 4,
+                            Code = "",
+                            CreditHours = 2,
+                            Name = "English Literature"
+                        });
                 });
 
             modelBuilder.Entity("SubjectPDF", b =>

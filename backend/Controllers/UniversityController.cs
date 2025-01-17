@@ -44,4 +44,24 @@ public class UniversityController : ControllerBase
 
         return Ok(universities);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUniversity(int id)
+    {
+        // Find the university by ID
+        var university = await _context.Universities.FindAsync(id);
+
+        // Check if the university exists
+        if (university == null)
+        {
+            return NotFound($"University with ID {id} not found.");
+        }
+
+        // Remove the university
+        _context.Universities.Remove(university);
+        await _context.SaveChangesAsync();
+
+        // Return success response
+        return NoContent();
+    }
 }
