@@ -65,6 +65,7 @@ public class UsersController : ControllerBase
                 {
                     Id = up.PDF.Id,
                     FileName = up.PDF.FileName,
+
                 }).ToList()
             })
             .ToListAsync();
@@ -75,28 +76,6 @@ public class UsersController : ControllerBase
         }
 
         return Ok(users);
-    }
-
-    [HttpGet("user/{userId}/pdfs")]
-    public async Task<ActionResult<IEnumerable<PdfDto>>> GetUserPdfs(int userId)
-    {
-        var user = await _context.Users
-            .Include(u => u.UserPDFs)
-            .ThenInclude(up => up.PDF)
-            .FirstOrDefaultAsync(u => u.Id == userId);
-
-        if (user == null)
-        {
-            return NotFound("User not found.");
-        }
-
-        var pdfs = user.UserPDFs.Select(up => new PdfDto
-        {
-            Id = up.PDF.Id,
-            FileName = up.PDF.FileName
-        }).ToList();
-
-        return Ok(pdfs);
     }
 
 }

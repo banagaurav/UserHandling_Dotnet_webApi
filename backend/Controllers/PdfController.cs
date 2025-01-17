@@ -1,5 +1,3 @@
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -49,55 +47,5 @@ public class PdfController : ControllerBase
         return File(pdf.FileData, "application/pdf", pdf.FileName);
     }
 
-    // POST api/pdf/upload
-    [HttpPost("upload")]
-    [Authorize] // Ensure that the user is authenticated
-    public async Task<ActionResult> UploadPdf([FromForm] UploadPdfDto uploadPdfDto)
-    {
-        // Get the logged-in user
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(userId))
-        {
-            return Unauthorized("User is not authenticated.");
-        }
-
-        // Check if the file is valid
-        if (uploadPdfDto.PdfFile == null || uploadPdfDto.PdfFile.Length == 0)
-        {
-            return BadRequest("No file uploaded.");
-        }
-
-        // Save the file data to the database
-        var pdf = new PDF
-        {
-            FileName = uploadPdfDto.PdfFile.FileName,
-            FileData = await ConvertFileToByteArray(uploadPdfDto.PdfFile),
-        };
-
-        // Add the PDF to the database
-        _context.PDFs.Add(pdf);
-        await _context.SaveChangesAsync();
-
-        // Create a junction entry to associate this PDF with the logged-in user
-        var user = await _userManager.FindByIdAsync(userId);
-        var userPdf = new UserPDF
-        {
-            UserId = user.Id,
-            PDFId = pdf.Id
-        };
-
-        _context.UserPDFs.Add(userPdf);
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "File uploaded successfully", pdfId = pdf.Id });
-    }
-
-    // Helper method to convert the uploaded file to a byte array
-    private async Task<byte[]> ConvertFileToByteArray(IFormFile file)
-    {
-        using var memoryStream = new MemoryStream();
-        await file.CopyToAsync(memoryStream);
-        return memoryStream.ToArray();
-    }
 
 }

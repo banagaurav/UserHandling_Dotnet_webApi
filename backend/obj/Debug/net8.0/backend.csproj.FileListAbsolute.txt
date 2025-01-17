@@ -169,3 +169,4 @@ D:\Code\UserHandling\backend\obj\Debug\net8.0\backend.pdb
 D:\Code\UserHandling\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
 D:\Code\UserHandling\backend\obj\Debug\net8.0\ref\backend.dll
 D:\Code\UserHandling\backend\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Code\UserHandling\backend\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
