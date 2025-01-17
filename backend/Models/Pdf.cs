@@ -9,4 +9,5 @@ public class PDF
 
     // Navigation property for related Users
     public ICollection<UserPDF> UserPDFs { get; set; } = new List<UserPDF>();
+    public ICollection<SubjectPDF> SubjectPDFs { get; set; } = new List<SubjectPDF>();
 }

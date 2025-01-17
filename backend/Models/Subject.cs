@@ -8,4 +8,6 @@ public class Subject
     // Foreign key for AcademicProgram
     public int AcademicProgramId { get; set; }
     public AcademicProgram AcademicProgram { get; set; } = null!;
+
+    public ICollection<SubjectPDF> SubjectPDFs { get; set; } = new List<SubjectPDF>();
 }

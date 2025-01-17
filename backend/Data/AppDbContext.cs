@@ -12,6 +12,8 @@ public class AppDbContext : DbContext
     public DbSet<AcademicProgram> AcademicPrograms { get; set; }
     public DbSet<Subject> Subjects { get; set; }
 
+    public DbSet<SubjectPDF> SubjectPDFs { get; set; }
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,5 +50,20 @@ public class AppDbContext : DbContext
             .HasOne(s => s.AcademicProgram)
             .WithMany(ap => ap.Subjects)
             .HasForeignKey(s => s.AcademicProgramId);
+
+
+        // Configure Subject-PDF relationship
+        modelBuilder.Entity<SubjectPDF>()
+            .HasKey(sp => new { sp.SubjectId, sp.PDFId });
+
+        modelBuilder.Entity<SubjectPDF>()
+            .HasOne(sp => sp.Subject)
+            .WithMany(s => s.SubjectPDFs)
+            .HasForeignKey(sp => sp.SubjectId);
+
+        modelBuilder.Entity<SubjectPDF>()
+            .HasOne(sp => sp.PDF)
+            .WithMany(p => p.SubjectPDFs)
+            .HasForeignKey(sp => sp.PDFId);
     }
 }

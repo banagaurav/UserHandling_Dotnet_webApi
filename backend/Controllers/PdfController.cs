@@ -17,12 +17,21 @@ public class PdfController : ControllerBase
     public async Task<ActionResult<IEnumerable<PdfDto>>> GetAllPdfs()
     {
         var pdfs = await _context.PDFs
-            .Select(pdf => new PdfDto
+             .Include(p => p.SubjectPDFs)
+                .ThenInclude(s => s.Subject)
+        .Select(p => new PdfDto
+        {
+            Id = p.Id,
+            FileName = p.FileName,
+            Subjects = p.SubjectPDFs.Select(s => new SubjectDto
             {
-                Id = pdf.Id,
-                FileName = pdf.FileName
-            })
-            .ToListAsync();
+                Id = s.Subject.Id,
+                Name = s.Subject.Name,
+                Code = s.Subject.Code,
+                CreditHours = s.Subject.CreditHours
+            }).ToList()
+        })
+        .ToListAsync();
 
         if (pdfs.Count == 0)
         {

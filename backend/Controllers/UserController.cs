@@ -55,8 +55,8 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<UserDtoPdf>>> GetAllUsersWithPdfs()
     {
         var users = await _context.Users
-            .Include(user => user.UserPDFs) // Include the junction table
-            .ThenInclude(up => up.PDF)     // Then include the PDF entity
+            .Include(user => user.UserPDFs)
+            .ThenInclude(up => up.PDF)
             .Select(user => new UserDtoPdf
             {
                 Id = user.Id,
