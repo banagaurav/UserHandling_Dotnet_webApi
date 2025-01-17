@@ -43,7 +43,42 @@ public class PdfController : ControllerBase
             return NotFound("PDF not found.");
         }
 
-        return File(pdf.FileData, "application/pdf", pdf.FileName);
+        var response = new
+        {
+            FileName = pdf.FileName,
+            FileData = Convert.ToBase64String(pdf.FileData) // Encode file data as base64
+        };
+
+        return Ok(response);
+        // return File(pdf.FileData, "application/pdf", pdf.FileName);
+    }
+    [HttpGet("all-with-User")]
+    public async Task<ActionResult<IEnumerable<PdfDtoUser>>> GetAllPdfWithUser()
+    {
+        var PDFs = await _context.PDFs
+            .Include(pdf => pdf.UserPDFs)      // Include the junction table
+            .ThenInclude(up => up.User)       // Include the related User entity
+            .Select(pdf => new PdfDtoUser
+            {
+                Id = pdf.Id,
+                FileName = pdf.FileName,
+                Users = pdf.UserPDFs.Select(up => new UserDto
+                {
+                    Id = up.User.Id,
+                    FullName = up.User.FullName,
+                    Email = up.User.Email,
+                    Username = up.User.Username,
+                    Role = up.User.Role
+                }).ToList()
+            })
+            .ToListAsync();
+
+        if (PDFs == null || PDFs.Count == 0)
+        {
+            return NotFound("No PDFs found.");
+        }
+
+        return Ok(PDFs);
     }
 
     [HttpPost("upload")]

@@ -16,7 +16,10 @@ public class UsersController : ControllerBase
     [HttpGet("all")]
     public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
     {
-        var users = await _context.Users.ToListAsync();
+        var users = await _context.Users
+                                .Include(u => u.UserPDFs)
+                                    .ThenInclude(up => up.PDF)
+                                .ToListAsync();
 
         if (users == null || users.Count == 0)
         {
