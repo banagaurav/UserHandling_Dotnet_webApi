@@ -60,9 +60,12 @@ public class SubjectController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<SubjectDto>> UploadSubject(SubjectDto subjectDto)
     {
-
         // Check if the referenced AcademicProgram exists
-        var academicProgram = await _context.AcademicPrograms.FindAsync(subjectDto.AcademicProgramId);
+        var academicProgram = await _context.AcademicPrograms
+            .Include(ap => ap.Faculty) // Include the Faculty details
+            .ThenInclude(f => f.University) // Include the University details
+            .FirstOrDefaultAsync(ap => ap.Id == subjectDto.AcademicProgramId);
+
         if (academicProgram == null)
         {
             return BadRequest($"AcademicProgram with ID {subjectDto.AcademicProgramId} not found.");
@@ -80,10 +83,14 @@ public class SubjectController : ControllerBase
         _context.Subjects.Add(subject);
         await _context.SaveChangesAsync();
 
-        // Return the uploaded subject as a DTO
+        // Return the uploaded subject as a DTO, including Faculty and University
         subjectDto.Id = subject.Id;
+        subjectDto.FacultyName = academicProgram.Faculty.Name;
+        subjectDto.UniversityName = academicProgram.Faculty.University.Name;
+
         return CreatedAtAction(nameof(GetAllSubjects), new { id = subject.Id }, subjectDto);
     }
+
 
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateSubject(int id, SubjectDto subjectDto)

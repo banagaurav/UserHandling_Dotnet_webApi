@@ -30,7 +30,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<UserPDF>()
             .HasOne(up => up.PDF)
             .WithMany(p => p.UserPDFs)
-            .HasForeignKey(up => up.PDFId);
+            .HasForeignKey(up => up.PDFId)
+            .OnDelete(DeleteBehavior.Cascade);
 
 
         // University-Faculty relationship
@@ -64,8 +65,13 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<SubjectPDF>()
             .HasOne(sp => sp.PDF)
             .WithMany(p => p.SubjectPDFs)
-            .HasForeignKey(sp => sp.PDFId);
+            .HasForeignKey(sp => sp.PDFId)
+            .OnDelete(DeleteBehavior.Cascade);
 
+        modelBuilder.Entity<University>().HasData(
+            new University { Id = 1, Name = "PU" },
+            new University { Id = 2, Name = "TU" }
+            );
 
         // Seed data for Faculties
         modelBuilder.Entity<Faculty>().HasData(

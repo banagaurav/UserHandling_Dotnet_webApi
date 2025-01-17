@@ -250,6 +250,20 @@ namespace backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Universities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Location = "",
+                            Name = "PU"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Location = "",
+                            Name = "TU"
+                        });
                 });
 
             modelBuilder.Entity("User", b =>

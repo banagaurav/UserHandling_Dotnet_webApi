@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250117122910_SeedDataModified")]
-    partial class SeedDataModified
+    [Migration("20250117133708_Data")]
+    partial class Data
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -253,6 +253,20 @@ namespace backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Universities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Location = "",
+                            Name = "PU"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Location = "",
+                            Name = "TU"
+                        });
                 });
 
             modelBuilder.Entity("User", b =>
