@@ -12,6 +12,14 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader());
+});
+
 // ✅ Retrieve JWT Secret Key with Error Handling
 var secretKey = builder.Configuration["Jwt:SecretKey"]
     ?? throw new InvalidOperationException("JWT Secret key is missing from configuration.");
@@ -53,6 +61,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowAll");
 // ✅ Middleware Order (Ensure Correct Placement)
 app.UseHttpsRedirection(); // Redirect HTTP to HTTPS
 app.UseAuthentication();    // Enable JWT Authentication
