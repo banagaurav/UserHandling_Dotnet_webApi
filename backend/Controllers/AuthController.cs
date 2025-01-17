@@ -27,8 +27,8 @@ public class AuthController : ControllerBase
         {
             Message = "Login successful.",
             UserId = user.Id,
-            FullName = user.FullName,
-            Role = user.Role
+            user.FullName,
+            user.Role
         });
     }
 
