@@ -24,24 +24,30 @@ public class AcademicProgramController : ControllerBase
                 Id = ap.Id,
                 Name = ap.Name,
                 Code = ap.Code,
-                FacultyId = ap.FacultyId,
-                FacultyName = ap.Faculty.Name,
-                UniversityId = ap.Faculty.UniversityId,
-                UniversityName = ap.Faculty.University.Name
+                Faculty = new FacultyDto
+                {
+                    Id = ap.Faculty.Id,
+                    Name = ap.Faculty.Name,
+                    University = new UniversityDto
+                    {
+                        Id = ap.Faculty.University.Id,
+                        Name = ap.Faculty.University.Name,
+                        Location = ap.Faculty.University.Location
+                    }
+                }
             })
             .ToListAsync();
 
         return Ok(programs);
     }
-
     // Upload (Create) AcademicProgram
     [HttpPost]
     public async Task<ActionResult<AcademicProgramDto>> CreateAcademicProgram(AcademicProgramDto programDto)
     {
         // Validate if Faculty exists
         var faculty = await _context.Faculties
-            .Include(f => f.University) // Include University to validate the university for the Faculty
-            .FirstOrDefaultAsync(f => f.Id == programDto.FacultyId);
+            .Include(f => f.University) // Include University to validate the association
+            .FirstOrDefaultAsync(f => f.Id == programDto.Faculty.Id);
 
         if (faculty == null)
         {
@@ -55,8 +61,8 @@ public class AcademicProgramController : ControllerBase
             return NotFound("University not found.");
         }
 
-        // Check if the UniversityId matches the provided UniversityId in the DTO
-        if (programDto.UniversityId != university.Id)
+        // Check if the provided University ID matches the Faculty's associated University
+        if (programDto.Faculty.University.Id != university.Id)
         {
             return BadRequest("The Faculty is associated with a different University.");
         }
@@ -66,21 +72,33 @@ public class AcademicProgramController : ControllerBase
         {
             Name = programDto.Name,
             Code = programDto.Code,
-            FacultyId = programDto.FacultyId
+            FacultyId = faculty.Id
         };
 
         _context.AcademicPrograms.Add(program);
         await _context.SaveChangesAsync();
 
-        // Return the created Academic Program with its Faculty and University details
-        programDto.Id = program.Id;
-        programDto.FacultyName = faculty.Name;
-        programDto.UniversityId = university.Id;
-        programDto.UniversityName = university.Name;
+        // Map the response to the updated DTO structure
+        var createdProgramDto = new AcademicProgramDto
+        {
+            Id = program.Id,
+            Name = program.Name,
+            Code = program.Code,
+            Faculty = new FacultyDto
+            {
+                Id = faculty.Id,
+                Name = faculty.Name,
+                University = new UniversityDto
+                {
+                    Id = university.Id,
+                    Name = university.Name,
+                    Location = university.Location
+                }
+            }
+        };
 
-        return CreatedAtAction(nameof(GetAllAcademicPrograms), new { id = program.Id }, programDto);
+        return CreatedAtAction(nameof(GetAllAcademicPrograms), new { id = program.Id }, createdProgramDto);
     }
-
     // Delete AcademicProgram
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAcademicProgram(int id)

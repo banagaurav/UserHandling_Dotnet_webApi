@@ -23,14 +23,18 @@ public class FacultyController : ControllerBase
             {
                 Id = f.Id,
                 Name = f.Name,
-
-                UniversityId = f.UniversityId,
-                UniversityName = f.University.Name
+                University = new UniversityDto
+                {
+                    Id = f.University.Id,
+                    Name = f.University.Name,
+                    Location = f.University.Location
+                }
             })
             .ToListAsync();
 
         return Ok(faculties);
     }
+
 
     // POST a new Faculty and associate it with an existing University
     [HttpPost]
@@ -44,7 +48,7 @@ public class FacultyController : ControllerBase
 
         // Check if the University exists
         var university = await _context.Universities
-            .FirstOrDefaultAsync(u => u.Id == facultyDto.UniversityId);
+            .FirstOrDefaultAsync(u => u.Id == facultyDto.University.Id);
 
         if (university == null)
         {
@@ -57,15 +61,26 @@ public class FacultyController : ControllerBase
             var faculty = new Faculty
             {
                 Name = facultyDto.Name,
-                UniversityId = facultyDto.UniversityId
+                UniversityId = university.Id
             };
 
             _context.Faculties.Add(faculty);
             await _context.SaveChangesAsync();
 
-            // Return the created Faculty data
-            facultyDto.Id = faculty.Id;
-            return CreatedAtAction(nameof(GetAllFaculties), new { id = faculty.Id }, facultyDto);
+            // Return the created Faculty data with University details
+            var createdFacultyDto = new FacultyDto
+            {
+                Id = faculty.Id,
+                Name = faculty.Name,
+                University = new UniversityDto
+                {
+                    Id = university.Id,
+                    Name = university.Name,
+                    Location = university.Location
+                }
+            };
+
+            return CreatedAtAction(nameof(GetAllFaculties), new { id = faculty.Id }, createdFacultyDto);
         }
         catch (Exception ex)
         {

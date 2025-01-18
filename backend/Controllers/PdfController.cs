@@ -18,23 +18,38 @@ public class PdfController : ControllerBase
     {
         var pdfs = await _context.PDFs
             .Include(p => p.SubjectPDFs)
-                .ThenInclude(s => s.Subject)
-                    .ThenInclude(sub => sub.AcademicProgram)
+                .ThenInclude(sp => sp.Subject)
+                    .ThenInclude(s => s.AcademicProgram)
                     .ThenInclude(ap => ap.Faculty)
                         .ThenInclude(f => f.University)
             .Select(p => new PdfDto
             {
                 Id = p.Id,
                 FileName = p.FileName,
-                Subjects = p.SubjectPDFs.Select(s => new SubjectDto
+                Subjects = p.SubjectPDFs.Select(sp => new SubjectDto
                 {
-                    Id = s.Subject.Id,
-                    Name = s.Subject.Name,
-                    Code = s.Subject.Code,
-                    CreditHours = s.Subject.CreditHours,
-                    AcademicProgramName = s.Subject.AcademicProgram.Name,
-                    FacultyName = s.Subject.AcademicProgram.Faculty.Name,
-                    UniversityName = s.Subject.AcademicProgram.Faculty.University.Name
+                    Id = sp.Subject.Id,
+                    Name = sp.Subject.Name,
+                    Code = sp.Subject.Code,
+                    CreditHours = sp.Subject.CreditHours,
+                    // Map the AcademicProgramDto
+                    AcademicProgram = new AcademicProgramDto
+                    {
+                        Id = sp.Subject.AcademicProgram.Id,
+                        Name = sp.Subject.AcademicProgram.Name,
+                        Code = sp.Subject.AcademicProgram.Code,
+                        Faculty = new FacultyDto
+                        {
+                            Id = sp.Subject.AcademicProgram.Faculty.Id,
+                            Name = sp.Subject.AcademicProgram.Faculty.Name,
+                            University = new UniversityDto
+                            {
+                                Id = sp.Subject.AcademicProgram.Faculty.University.Id,
+                                Name = sp.Subject.AcademicProgram.Faculty.University.Name,
+                                Location = sp.Subject.AcademicProgram.Faculty.University.Location
+                            }
+                        }
+                    }
                 }).ToList()
             })
             .ToListAsync();
@@ -97,12 +112,23 @@ public class PdfController : ControllerBase
                     Name = sp.Subject.Name,
                     Code = sp.Subject.Code,
                     CreditHours = sp.Subject.CreditHours,
-                    AcademicProgramId = sp.Subject.AcademicProgramId,
-                    AcademicProgramName = sp.Subject.AcademicProgram.Name,
-                    FacultyId = sp.Subject.AcademicProgram.FacultyId,
-                    FacultyName = sp.Subject.AcademicProgram.Faculty.Name,
-                    UniversityId = sp.Subject.AcademicProgram.Faculty.UniversityId,
-                    UniversityName = sp.Subject.AcademicProgram.Faculty.University.Name
+                    AcademicProgram = new AcademicProgramDto
+                    {
+                        Id = sp.Subject.AcademicProgram.Id,
+                        Name = sp.Subject.AcademicProgram.Name,
+                        Code = sp.Subject.AcademicProgram.Code,
+                        Faculty = new FacultyDto
+                        {
+                            Id = sp.Subject.AcademicProgram.Faculty.Id,
+                            Name = sp.Subject.AcademicProgram.Faculty.Name,
+                            University = new UniversityDto
+                            {
+                                Id = sp.Subject.AcademicProgram.Faculty.University.Id,
+                                Name = sp.Subject.AcademicProgram.Faculty.University.Name,
+                                Location = sp.Subject.AcademicProgram.Faculty.University.Location
+                            }
+                        }
+                    }
                 }).ToList()
             })
             .ToListAsync();
@@ -114,6 +140,7 @@ public class PdfController : ControllerBase
 
         return Ok(PDFs);
     }
+
     [HttpPost("upload")]
     [Authorize] // Ensure the user is authenticated
     public async Task<ActionResult> UploadPdf([FromForm] UploadPdfDto uploadPdfDto)
@@ -130,6 +157,13 @@ public class PdfController : ControllerBase
         if (uploadPdfDto.PdfFile == null || uploadPdfDto.PdfFile.Length == 0)
         {
             return BadRequest("No file uploaded.");
+        }
+
+        // Optionally, check for file size limit (e.g., 10 MB)
+        const int MaxFileSize = 10 * 1024 * 1024; // 10 MB
+        if (uploadPdfDto.PdfFile.Length > MaxFileSize)
+        {
+            return BadRequest("File size exceeds the maximum allowed size of 10 MB.");
         }
 
         // Check if the Subject, AcademicProgram, Faculty, and University exist
@@ -174,7 +208,17 @@ public class PdfController : ControllerBase
         _context.SubjectPDFs.Add(subjectPdf);
         await _context.SaveChangesAsync();
 
-        return Ok(new { message = "File uploaded successfully", pdfId = pdf.Id });
+        // Return a detailed response with associated entities
+        return Ok(new
+        {
+            message = "File uploaded successfully",
+            pdfId = pdf.Id,
+            fileName = pdf.FileName,
+            subject = new { subject.Id, subject.Name },
+            academicProgram = new { academicProgram.Id, academicProgram.Name },
+            faculty = new { faculty.Id, faculty.Name },
+            university = new { university.Id, university.Name }
+        });
     }
 
     // Helper method to convert the uploaded file to a byte array
